@@ -14,6 +14,13 @@ def main() -> None:
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
         f.write(LINE)
+    # Self-check against the bounty gate: 1-200 chars, no trailing newline.
+    # Read back the bytes we just wrote and fail loudly if the gate is missed.
+    with open("/output/entry.txt", "rb") as f:
+        data = f.read()
+    text = data.decode("utf-8")
+    assert 1 <= len(text) <= 200, "entry length out of gate"
+    assert not data.endswith(b"\n"), "entry must not end with a newline"
 
 
 if __name__ == "__main__":
